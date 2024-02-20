@@ -1,0 +1,71 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "extends": [
+        "airbnb",
+        "airbnb-typescript",
+        "airbnb/hooks",
+        "eslint:recommended",
+        "prettier",
+        "plugin:prettier/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime"
+    ],
+    "plugins": [
+        "@typescript-eslint",
+        "react",
+        "react-native",
+        "prettier",
+        "unused-imports"
+    ],
+    "rules": {
+        "react/jsx-uses-react": "off",
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".ts",
+                    ".tsx"
+                ]
+            }
+        ],
+        "react/style-prop-object": [
+            "error",
+            {
+                "allow": ["StatusBar"]
+            }
+        ],
+        "prettier/prettier": ["error"],
+        "react/require-default-props": "off",
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": [
+            "warn",
+            {
+                "vars": "all",
+                "varsIgnorePattern": "^_",
+                "args": "after-used",
+                "argsIgnorePattern": "^_"
+            }
+        ],
+        "import/prefer-default-export": "off",
+        "import/extensions": [
+            "error",
+            "never"
+        ],
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": "off"
+    },
+    "env": {
+        "react-native/react-native": true
+    },
+    "root": true
+}
