@@ -3,11 +3,11 @@ import { NewUser } from '@model/users/NewUser'
 import { ContractObserver } from '@utils/ContractObserver'
 
 export abstract class UserDataContract extends ContractObserver {
-  abstract getAll(): User[]
+  abstract getAll(): Promise<User[]>
 
-  abstract getById(id: number): User | null
+  abstract getById(id: number): Promise<User | null>
 
-  abstract create(user: NewUser): void
+  abstract create(user: NewUser): Promise<void>
 
-  abstract delete(id: number): boolean
+  abstract delete(id: number): Promise<boolean>
 }

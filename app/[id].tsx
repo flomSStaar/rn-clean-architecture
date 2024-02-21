@@ -12,7 +12,7 @@ function UserDetail({}: UserDetailProps) {
   const deleteUser = useDeleteUser()
 
   const handleDeleteUser = () => {
-    deleteUser(userId)
+    return deleteUser(userId)
   }
 
   if (!user) {

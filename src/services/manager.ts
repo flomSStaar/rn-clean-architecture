@@ -1,4 +1,16 @@
 import { UserDataContract } from '@services/users/UserDataContract'
-import { MockUserProvider } from '@services/users/MockUserProvider'
+import { ApiUserProvider } from '@services/users/ApiUserProvider'
 
-export const userProvider: UserDataContract = new MockUserProvider()
+export class Manager {
+  private _userProvider: UserDataContract = new ApiUserProvider()
+
+  get userProvider(): UserDataContract {
+    return this._userProvider
+  }
+
+  set userProvider(value: UserDataContract) {
+    this._userProvider = value
+  }
+}
+
+export const manager = new Manager()

@@ -1,52 +1,76 @@
 import { useCallback, useEffect, useState } from 'react'
-import { userProvider } from '@services/manager'
 import { NewUser } from '@model/users/NewUser'
+import { User } from '@model/users/User'
+import { manager } from '@services/manager'
 
-export function useAllUsers() {
-  const [users, setUsers] = useState([...userProvider.getAll()])
+export function useAllUsers(): User[] {
+  const [users, setUsers] = useState<User[]>([])
+  const { userProvider } = manager
 
   useEffect(() => {
     const registerId = userProvider.register(() => {
-      setUsers([...userProvider.getAll()])
-      console.log('cocuou')
+      userProvider.getAll().then(result => {
+        setUsers([...result])
+      })
+    })
+
+    userProvider.getAll().then(result => {
+      setUsers([...result])
     })
 
     return () => {
       userProvider.unregister(registerId)
     }
-  }, [])
+  }, [userProvider])
 
   return users
 }
 
-export function useOneUser(id: number) {
-  const [user, setUser] = useState(userProvider.getById(id))
+export function useOneUser(id: number): User | null {
+  const [user, setUser] = useState<User | null>(null)
+  const { userProvider } = manager
 
   useEffect(() => {
     const registerId = userProvider.register(() => {
-      setUser(userProvider.getById(id))
+      userProvider.getById(id).then(result => {
+        setUser(result)
+      })
+    })
+
+    userProvider.getById(id).then(result => {
+      setUser(result)
     })
 
     return () => {
       userProvider.unregister(registerId)
     }
-  }, [id])
+  }, [id, userProvider])
 
   return user
 }
 
 export function useCreateUser() {
-  const createUser = useCallback((newUser: NewUser) => {
-    userProvider.create(newUser)
-  }, [])
+  const { userProvider } = manager
+
+  const createUser = useCallback(
+    (newUser: NewUser) => {
+      return userProvider.create(newUser)
+    },
+    [userProvider],
+  )
 
   return createUser
 }
 
 export function useDeleteUser() {
-  const deleteUser = useCallback((id: number) => {
-    userProvider.delete(id)
-  }, [])
+  const { userProvider } = manager
+
+  const deleteUser = useCallback(
+    (id: number) => {
+      return userProvider.delete(id)
+    },
+    [userProvider],
+  )
 
   return deleteUser
 }

@@ -1,10 +1,15 @@
-import { Button, ScrollView, Text, View } from 'react-native'
+import { Button, ScrollView, Switch, Text, View } from 'react-native'
 import { Link } from 'expo-router'
 import { Pressable } from 'expo-router/build/views/Pressable'
 import { NewUser } from '@model/users/NewUser'
 import { useAllUsers, useCreateUser, useDeleteUser } from '@services/users/useUsers'
+import { ApiUserProvider } from '@services/users/ApiUserProvider'
+import { MockUserProvider } from '@services/users/MockUserProvider'
+import { useState } from 'react'
+import { manager } from '@services/manager'
 
 function Index() {
+  const [mockState, setMockState] = useState<boolean>(false)
   const users = useAllUsers().sort((a, b) => b.id - a.id)
   const createUser = useCreateUser()
   const deleteUser = useDeleteUser()
@@ -16,20 +21,32 @@ function Index() {
   }
 
   const handleDeleteUser = (id: number) => {
-    deleteUser(id)
+    return deleteUser(id)
   }
 
-  const handleDeleteAll = () => {
+  const handleDeleteAll = async () => {
+    const promises = []
     for (let i = 0; i < users.length; i++) {
-      deleteUser(users[i].id)
+      promises.push(deleteUser(users[i].id))
     }
+    await Promise.all(promises)
+  }
+
+  function handleProviderChange(value: boolean) {
+    manager.userProvider = value ? new MockUserProvider() : new ApiUserProvider()
+
+    console.log('MockProvider', manager.userProvider instanceof MockUserProvider)
+    setMockState(value)
   }
 
   return (
     <ScrollView style={{ padding: 16 }} contentContainerStyle={{ gap: 16 }}>
       <Button title="Add user" onPress={handleAddUser} />
       <Button title="Delete all" onPress={handleDeleteAll} />
-      {/* <Button title="Refresh" onPress={refresh} /> */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flex: 1 }}>
+        <Text>Provider: {mockState ? 'Mock' : 'API'}</Text>
+        <Switch value={mockState} onValueChange={handleProviderChange} />
+      </View>
 
       <View style={{ gap: 8 }}>
         {users.length === 0 && <Text>No users</Text>}

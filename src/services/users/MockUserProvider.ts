@@ -12,15 +12,15 @@ export class MockUserProvider extends UserDataContract {
 
   private nextId: number = 5
 
-  getAll(): User[] {
-    return this.users
+  getAll(): Promise<User[]> {
+    return new Promise(resolve => resolve(this.users))
   }
 
-  getById(id: number): User | null {
-    return this.users.find(u => u.id === id) ?? null
+  getById(id: number): Promise<User | null> {
+    return new Promise(resolve => resolve(this.users.find(u => u.id === id) ?? null))
   }
 
-  create(newUser: NewUser): void {
+  create(newUser: NewUser): Promise<void> {
     const userId = this.nextId
     this.nextId += 1
     const user = new User(userId, newUser.name + userId, newUser.username + userId, userId + newUser.email)
@@ -29,19 +29,21 @@ export class MockUserProvider extends UserDataContract {
     console.log('MockUserProvider:create', user)
 
     this.onChange()
+
+    return new Promise(resolve => resolve(undefined))
   }
 
-  delete(id: number): boolean {
+  delete(id: number): Promise<boolean> {
     const userIndex = this.users.findIndex(u => u.id === id)
 
     if (userIndex < 0) {
-      return false
+      return new Promise(resolve => resolve(false))
     }
 
     const deletedUser = this.users.splice(userIndex, 1)
     console.log('MockUserProvider:delete', deletedUser)
 
     this.onChange()
-    return true
+    return new Promise(resolve => resolve(true))
   }
 }
